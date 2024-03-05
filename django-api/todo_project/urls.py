@@ -23,4 +23,5 @@ urlpatterns = [
      path('admin/', admin.site.urls),
      path('create/', views.CreateUserView.as_view(), name='create'),
      path('api/user/', include('user.urls')),
+     path('api/', include('post.urls')), 
 ]
