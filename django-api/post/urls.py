@@ -10,5 +10,4 @@ app_name = 'post'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('update/<int:pk>', views.PostEditView.as_view(), name='update'),
 ]

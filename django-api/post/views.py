@@ -36,13 +36,3 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new Post"""
         serializer.save(user=self.request.user)
-    
-class PostEditView(generics.RetrieveUpdateDestroyAPIView):
-    """Manage the authenticated user"""
-    serializer_class = serializers.PostSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_object(self):
-        """Retrieve and return authentication user"""
-        return self.request.post
