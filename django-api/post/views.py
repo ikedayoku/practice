@@ -1,8 +1,9 @@
-from rest_framework import viewsets, generics, pagination, response, authentication, permissions 
+from rest_framework import viewsets, generics, pagination, response, authentication, permissions, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from core.models import Post
+from core.models import Post, Comment
 
 from post import serializers
 
@@ -27,7 +28,7 @@ class PostPagination(pagination.PageNumberPagination):
 
 class PostViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating Posts"""
-    authentication_classes = (TokenAuthentication,)
+    # authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.PostSerializer
     queryset = Post.objects.order_by('-created_at')
@@ -36,3 +37,21 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new Post"""
         serializer.save(user=self.request.user)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """Handles creating, reading and updating Comments"""
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.CommentSerializer
+    queryset = Comment.objects.all()
+
+    def perform_create(self, serializer):
+        """Create a new Comment"""
+        serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        """Create a new Comment"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
