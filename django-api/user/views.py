@@ -22,21 +22,23 @@ class CreateTokenView(ObtainAuthToken):
     serializer_class = AuthTokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
-class ManageUserView(generics.RetrieveUpdateAPIView):
+class UpdateUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user"""
     serializer_class = UserSerializer
-    # authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (IsAuthenticated, )
+    queryset = User.objects.all()
+    def get_object(self):
+        """Retrieve and return authentication user"""
+        return self.request.user
+
+class DeleteUserView(generics.DestroyAPIView):
+    """Manage the authenticated user"""
+    serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, )
 
     def get_object(self):
         """Retrieve and return authentication user"""
         return self.request.user
-    
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    # authentication_classes = (SessionAuthentication,)
-    permission_classes = (IsAuthenticated, )
 
 class Login(APIView):
     serializer_class = LoginSerializer
