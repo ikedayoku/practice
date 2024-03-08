@@ -23,7 +23,7 @@ app_name = 'user'
 urlpatterns = [
      path('admin/', admin.site.urls),
      path('create/', views.CreateUserView.as_view(), name='create'),
-     path('login/', views.Login.as_view()),
+    #  path('login/', views.Login.as_view()),
      path('api/', include('post.urls')), 
      path('api/user/', include('user.urls')),
      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
